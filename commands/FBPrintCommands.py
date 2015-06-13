@@ -32,6 +32,7 @@ def lldbcommands():
     FBPrintApplicationDocumentsPath(),
     FBPrintData(),
     FBPrintTargetActions(),
+    FBPrintWindowCommand(),
   ]
 
 class FBPrintViewHierarchyCommand(fb.FBCommand):
@@ -424,3 +425,27 @@ class FBPrintTargetActions(fb.FBCommand):
       actionsDescription = fb.evaluateExpressionValue('(id)[{actions} componentsJoinedByString:@", "]'.format(actions=actions)).GetObjectDescription()
 
       print '{target}: {actions}'.format(target=targetDescription, actions=actionsDescription)
+
+class FBPrintWindowCommand(fb.FBCommand):
+  def name(self):
+    return 'pwindows'
+
+  def description(self):
+    return 'Print the window description of <aWindow> and views in it or all windows.'
+
+  def args(self):
+    return [ fb.FBCommandArgument(arg='aWindow', type='NSWindow*', help='The window to print the description of.', default='__empty__') ]
+
+  def run(self, arguments, options):
+    isMac = runtimeHelpers.isMacintoshArch()
+
+    if not isMac:
+      print 'sorry! this command only supported in mac os x.'
+    else:
+      if arguments[0] == '__empty__':
+        lldb.debugger.HandleCommand('po [[NSApplication sharedApplication] windows]')
+        return
+      else:
+        contentView = fb.evaluateObjectExpression('[{window} contentView]'.format(window=arguments[0]))
+        description = fb.evaluateExpressionValue('(id)[{contentView} _subtreeDescription]'.format(contentView=contentView)).GetObjectDescription()
+        print description
