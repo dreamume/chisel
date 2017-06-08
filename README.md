@@ -7,7 +7,7 @@ For a comprehensive overview of LLDB, and how Chisel complements it, read Ari Gr
 
 ## Installation
 
-```
+```shell
 brew update
 brew install chisel
 ```
@@ -33,19 +33,19 @@ There are many commands; here's a few:
 |-----------------|----------------|-------|-------|
 |pviews           |Print the recursive view description for the key window.|Yes|Yes|
 |pvc              |Print the recursive view controller description for the key window.|Yes|No|
-|visualize        |Open a UIImage, CGImageRef, UIView, or CALayer in Preview.app on your Mac.|Yes|No|
+|visualize        |Open a `UIImage`, `CGImageRef`, `UIView`, `CALayer`, `NSData` (of an image), `UIColor`, `CIColor`, or `CGColorRef` in Preview.app on your Mac.|Yes|No|
 |fv               |Find a view in the hierarchy whose class name matches the provided regex.|Yes|No|
 |fvc              |Find a view controller in the hierarchy whose class name matches the provided regex.|Yes|No|
 |show/hide        |Show or hide the given view or layer. You don't even have to continue the process to see the changes!|Yes|Yes|
 |mask/unmask      |Overlay a view or layer with a transparent rectangle to visualize where it is.|Yes|No|
 |border/unborder  |Add a border to a view or layer to visualize where it is.|Yes|Yes|
-|caflush          |Flush the render server (equivalent to a "repaint" if no animations are in-flight).)|Yes|Yes|
+|caflush          |Flush the render server (equivalent to a "repaint" if no animations are in-flight).|Yes|Yes|
 |bmessage         |Set a symbolic breakpoint on the method of a class or the method of an instance without worrying which class in the hierarchy actually implements the method.|Yes|Yes|
 |wivar            |Set a watchpoint on an instance variable of an object.|Yes|Yes|
 |presponder       |Print the responder chain starting from the given object.|Yes|Yes|
 |...              |... and many more!|
 
-To see the list of **all** of the commands execute the help command in `LLDB`.
+To see the list of **all** of the commands execute the help command in `LLDB` or go to the [Wiki](https://github.com/facebook/chisel/wiki).
 
 ```Python
 (lldb) help
@@ -79,7 +79,7 @@ All of the commands provided by `Chisel` come with verbose help. Be sure to read
 ## Custom Commands
 You can add local, custom commands. Here's a contrived example.
 
-```
+```python
 #!/usr/bin/python
 # Example file with custom commands, located at /magical/commands/example.py
 
@@ -119,7 +119,7 @@ Developing commands, whether for local use or contributing to `Chisel` directly,
 
 1. Start `LLDB`
 2. Reach a breakpoint (or simply pause execution via the pause button in `Xcode`'s debug bar or `process interrupt` if attached directly)
-3. Execute _command source ~/.lldbinit_ in `LLDB` to source the commands
+3. Execute `command source ~/.lldbinit` in LLDB to source the commands
 4. Run the command you are working on
 5. Modify the command
 6. Optionally run `script reload(modulename)`
