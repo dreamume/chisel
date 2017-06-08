@@ -17,7 +17,8 @@ import fblldbobjecthelpers as objectHelpers
 
 def lldbcommands():
   return [
-    FBVisualizeCommand()
+    FBVisualizeCommand(),
+    FBAppleDebuggingInformationOverlayCommand()
   ]
 
 def _showImage(commandForImage):
@@ -181,3 +182,14 @@ class FBVisualizeCommand(fb.FBCommand):
 
   def run(self, arguments, options):
     _visualize(arguments[0])
+
+class FBAppleDebuggingInformationOverlayCommand(fb.FBCommand):
+  def name(self):
+    return 'applevdebug'
+
+  def description(self):
+    return 'Show Apple UIDebuggingInformationOverlay, for Debug.'
+
+  def run(self, arguments, options):
+    lldb.debugger.HandleCommand('expr -l objc++ -- [UIDebuggingInformationOverlay prepareDebuggingOverlay]')
+    lldb.debugger.HandleCommand('expr -l objc++ -- (void)[[UIDebuggingInformationOverlay overlay] toggleVisibility]')
