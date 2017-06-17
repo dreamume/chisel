@@ -18,7 +18,8 @@ import fblldbobjecthelpers as objectHelpers
 def lldbcommands():
   return [
     FBVisualizeCommand(),
-    FBAppleDebuggingInformationOverlayCommand()
+    FBAppleDebuggingInformationOverlayCommand(),
+    FBReadMemory(),
   ]
 
 def _showImage(commandForImage):
@@ -193,3 +194,32 @@ class FBAppleDebuggingInformationOverlayCommand(fb.FBCommand):
   def run(self, arguments, options):
     lldb.debugger.HandleCommand('expr -l objc++ -- [UIDebuggingInformationOverlay prepareDebuggingOverlay]')
     lldb.debugger.HandleCommand('expr -l objc++ -- (void)[[UIDebuggingInformationOverlay overlay] toggleVisibility]')
+
+class FBReadMemory(fb.FBCommand):
+  def name(self):
+    return 'readraw'
+
+  def description(self):
+    return 'Read raw data, and store to a file'
+
+  def args(self):
+    return [ 
+      fb.FBCommandArgument(arg='address', type='int', help='the start address.'),
+      fb.FBCommandArgument(arg='size', type='int', help='the address\' length'),
+      fb.FBCommandArgument(arg='filePath', type='string', help='The save file\' path.')
+    ]
+
+  def run(self, arguments, options):
+    address, size, filePath = arguments
+    process = lldb.debugger.GetSelectedTarget().GetProcess()
+    error = lldb.SBError()
+    addr = int(address, 16)
+    length = int(size)
+    mem = process.ReadMemory(addr, length, error)
+
+    if error is not None and str(error) != 'success':
+      print error
+    else:
+      theFile = open(filePath, 'wb')
+      theFile.write(mem)
+      theFile.close()
